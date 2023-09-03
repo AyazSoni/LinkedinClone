@@ -13,7 +13,7 @@ const Home = () => {
       </div>
     </section>
     
-    <section className="contain md:flex p-4 pt-12 md:justify-between
+    <section className="contain md:flex p-4 pt-12 
     overflow-y-scroll  ">
     
        <LeftSide />

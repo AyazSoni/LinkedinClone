@@ -9,17 +9,24 @@ import navNotificationIcon from "../Images/nav-notifications.svg";
 import userIcon from "../Images/user.svg";
 import downIcon from "../Images/down-icon.svg";
 import workIcon from "../Images/nav-work.svg";
+import {connect} from "react-redux";
+import React, { useState } from 'react';
+import {SignOutAPI} from "../Action/index.js";
 
-const Header = () => {
+const Header = (props) => {
+  const [isVisible, setIsVisible] = useState(false);
   return (
-  <div className="">
-    <div className="md:flex ">
+    <div>
+    <div className="md:flex">
       {/* Search bar and logo */}
-      <div className="flex p-1 md:p-3 md:pl-10 bg-white w-full fixed z-10 ">
+      <div
+        className="flex p-1 md:p-3 md:pl-10 bg-white w-full fixed z-10"
+      >
         <img className="pl-5" src={homeLogo} alt="Home Logo" />
-        <img className="bg-gray-200 pl-3 ml-3" src={searchIcon} alt="Search Icon" />
-        <input className="bg-gray-200 pl-3" type="text" placeholder="Search" />
+         <img className="bg-gray-200 pl-3 ml-3" src={searchIcon} alt="Search Icon" /> 
+         <input className="bg-gray-200 pl-3" type="text" placeholder="Search" />
       </div>
+
 
       {/* Navigation bar */}
       <div className="bg-white flex fixed w-full md:w-fit h-fit md:right-40
@@ -52,23 +59,52 @@ const Header = () => {
 
       {/* User profile */}
       <div className="fixed top-0 right-0 bg-white px-3 pr-4 pt-1 md:pt-2 
-      md:top-0 md:h-fit md:right-24 z-30">
-        <img className=" w-6 md:w-7 rounded-2xl" src={userIcon} alt="User" />
+      md:top-0 md:h-fit md:right-24 z-30"
+       onClick={() => setIsVisible(!isVisible)}
+      >
+      
+       { 
+         props.user && props.user.photoURL ? 
+         (<img className="w-6 md:w-7
+       rounded-2xl" src={props.user.photoURL} alt="User" />)
+       :
+        (<img className="w-6 md:w-7 rounded-2xl" src={userIcon} alt="User" />)
+        }
+        
         <p className="text-left" style={{ fontSize: "10px" }}>Me</p>
         <img className="w-3 absolute bottom-0 right-3" src={downIcon} alt="Dropdown" />
       </div>
 
       {/* Work icon */}
-      <div className="absolute bottom-1 right-0 bg-white px-3 pt-2 md:top-0
+      <div className="fixed bottom-1 right-0 bg-white px-3 pt-2 md:top-0
       md:h-fit md:right-9 border-l border-l-gray-200 border-solid hidden
       md:block z-30">
         <img className="w-8 rounded-2xl" src={workIcon} alt="Work" />
         <p className="text-left" style={{ fontSize: "8px" }}>Work</p>
         <img className="w-3 absolute bottom-0 right-2" src={downIcon} alt="Dropdown" />
       </div>
+        {isVisible && <span 
+      className="z-30 fixed right-4 bg-white font-bold top-10 px-5 py-2
+      md:right-24 md:top-12
+      shadow-black drop-shadow-md text-blue-400
+"
+      style={{ fontSize: "10px" }}
+      ><button onClick={() =>{
+        props.signOut();
+       setIsVisible(!isVisible);
+      }}>logout </button></span>}
     </div>
+     
   </div>
   );
 }
 
-export default Header;
+const mapStateToProps = (state) => ({
+  user : state.UserReducer.user,
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  signOut : () => dispatch(SignOutAPI()),
+})
+
+export default connect(mapStateToProps , mapDispatchToProps)(Header);

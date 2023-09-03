@@ -4,8 +4,9 @@ import photo from "../Images/photo.svg";
 import network from "../Images/widget-icon.svg";
 import item from "../Images/item-icon.svg";
 import plus from "../Images/plus-icon.svg";
+import {connect} from "react-redux";
 
-const LeftSide = () => {
+const LeftSide = (props) => {
   return(
   <div className="Container md:pl-8 md:w-56 ">
     {/* first card showing personal info. */}
@@ -19,7 +20,7 @@ const LeftSide = () => {
            </div>
            <p className="font-bold relative bottom-5">
              <span>Welcome,</span>
-             <span> Soni Ayaz!</span>
+             <span> {props.user ? props.user.displayName : "there"}!</span>
            </p>
            <p className="relative bottom-4 text-blue-500 font-bold " 
            style={{ fontSize: "12px" }}
@@ -66,4 +67,12 @@ const LeftSide = () => {
   );
 }
 
-export default LeftSide;
+const mapStateToProps = (state) => ({
+  user : state.UserReducer.user,
+})
+
+const mapDispatchToProps = (dispatch) => ({
+
+})
+
+export default connect(mapStateToProps , mapDispatchToProps)(LeftSide);
